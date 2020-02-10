@@ -1,6 +1,6 @@
 {
     "verbose": true,
     "ignore": ["node_modules", ".next"],
-    "watch": ["pages/**/*", "src/**/*", "public/**/*"],
+    "watch": ["pages/**/*", "src/**/*", "public/**/*", "components/**/*"],
     "ext": "js json"
 }

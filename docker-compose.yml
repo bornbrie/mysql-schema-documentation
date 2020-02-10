@@ -54,7 +54,6 @@ services:
     ports:
       - "${REACT_APP_CLIENT_PORT}:${REACT_APP_CLIENT_PORT}"
     volumes:
-      - ./client/src:/srv/client/src
       - ./client/public:/srv/client/public
       - ./client/pages:/srv/client/pages
       - ./client/components:/srv/client/components

@@ -6,6 +6,12 @@ const env = require('dotenv').config();
 router.get('/', (req, res) => res.send('Hello MYSQL Schema API!'))
 
 router.get('/schema', (req, res) => {
+    console.log(
+        'host', env.MYSQL_HOST,
+        'port', env.MYSQL_PORT,
+        'user', env.MYSQL_USER,
+        'password', env.MYSQL_PASSWORD
+    )
     const schema = mysql.createConnection({
         host: env.MYSQL_HOST,
         port: env.MYSQL_PORT,

@@ -1,0 +1,63 @@
+version: '3.7'
+
+networks:
+  mysql-schema:
+
+volumes:
+  mysql-database: {}
+
+services:
+
+  mysql:
+    image: 'mysql:latest'
+    container_name: 'mysql-schema-mysql'
+    volumes:
+      - mysql-database:/var/lib/mysql
+    ports:
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
+    expose:
+      - "${MYSQL_PORT}"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - mysql-schema
+  
+  server:
+    container_name: 'mysql-schema-server'
+    build: ./server
+    expose:
+      - ${SERVER_PORT}
+    environment:
+      API_HOST: "${SERVER_URL}${SERVER_PORT}"
+      APP_SERVER_PORT: ${SERVER_PORT}
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    expose:
+      - ${MYSQL_PORT}
+    volumes:
+      - ./server/src:/srv/server/src
+    command: npm run dev
+    networks:
+      - mysql-schema
+
+  client:
+    container_name: 'mysql-schema-client'
+    build: ./client
+    environment:
+      - REACT_APP_CLIENT_PORT=${REACT_APP_CLIENT_PORT}
+    expose:
+      - ${REACT_APP_CLIENT_PORT}
+    ports:
+      - "${REACT_APP_CLIENT_PORT}:${REACT_APP_CLIENT_PORT}"
+    volumes:
+      - ./client/src:/srv/client/src
+      - ./client/public:/srv/client/public
+      - ./client/pages:/srv/client/pages
+      - ./client/components:/srv/client/components
+    command: npm run dev
+    networks:
+      - mysql-schema
